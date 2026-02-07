@@ -24,6 +24,12 @@ export const updateAdminPassword = async (id, hashedPassword) => {
   return result.rowCount > 0;
 };
 
+// Update admin email
+export const updateAdminEmail = async (id, email) => {
+  const result = await pool.query('UPDATE admins SET email = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [email, id]);
+  return result.rowCount > 0;
+};
+
 // Get admin count
 export const getAdminCount = async () => {
   const result = await pool.query('SELECT COUNT(*) as count FROM admins WHERE is_active = TRUE');

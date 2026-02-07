@@ -19,6 +19,21 @@ export const login = async (req, res) => {
   }
 };
 
+// Change email controller
+export const changeEmail = async (req, res) => {
+  try {
+    const { newEmail, password } = req.body;
+    const adminId = req.user.id;
+
+    await authService.changeEmail(adminId, newEmail, password);
+
+    sendSuccess(res, {}, 'Email changed successfully', 200);
+  } catch (error) {
+    logger.error('Change email error:', error.message);
+    sendError(res, error.message, 400);
+  }
+};
+
 // Change password controller
 export const changePassword = async (req, res) => {
   try {

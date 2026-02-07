@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/login', authLimiter, validateLoginRequest, authController.login);
 
 // Protected routes
+router.put('/change-email', verifyToken, authController.changeEmail);
 router.put('/change-password', verifyToken, validateChangePasswordRequest, authController.changePassword);
 
 export default router;

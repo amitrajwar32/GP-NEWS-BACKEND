@@ -46,6 +46,45 @@ export const loginAdmin = async (identifier, password) => {
   };
 };
 
+// Change email service
+export const changeEmail = async (adminId, newEmail, password) => {
+  // Validate inputs
+  if (!newEmail || !password) {
+    throw new Error('Email and password are required');
+  }
+
+  if (!validateEmail(newEmail)) {
+    throw new Error('Invalid email format');
+  }
+
+  // Get admin
+  const admin = await AdminModel.getAdminById(adminId);
+  if (!admin) {
+    throw new Error('Admin not found');
+  }
+
+  // Check if email already exists
+  const existingAdmin = await AdminModel.getAdminByEmail(newEmail);
+  if (existingAdmin && existingAdmin.id !== adminId) {
+    throw new Error('Email already in use');
+  }
+
+  // Verify password
+  const adminFull = await AdminModel.getAdminByUsername(admin.username);
+  const isPasswordValid = await bcrypt.compare(password, adminFull.password);
+  if (!isPasswordValid) {
+    throw new Error('Password is incorrect');
+  }
+
+  // Update email
+  const updated = await AdminModel.updateAdminEmail(adminId, newEmail);
+  if (!updated) {
+    throw new Error('Failed to update email');
+  }
+
+  return true;
+};
+
 // Change password service
 export const changePassword = async (adminId, oldPassword, newPassword) => {
   // Validate inputs
